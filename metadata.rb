@@ -8,6 +8,9 @@ version '0.2.0'
 source_url 'https://github.com/datacoda/chef-l2tp-ipsec'
 issues_url 'https://github.com/datacoda/chef-l2tp-ipsec/issues'
 
+supports 'redhat'
+supports 'centos'
+supports 'fedora'
 supports 'ubuntu'
 
 # Required if you use the l2tp-ipsec::firewall recipe

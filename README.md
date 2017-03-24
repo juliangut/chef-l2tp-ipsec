@@ -1,5 +1,5 @@
-l2tp-ipsec cookbook
-===================
+# l2tp-ipsec cookbook
+
 [![Cookbook Version](https://img.shields.io/cookbook/v/l2tp-ipsec.svg)](https://supermarket.chef.io/cookbooks/l2tp-ipsec)
 [![Dependency Status](http://img.shields.io/gemnasium/datacoda/chef-l2tp-ipsec.svg?style=flat)](https://gemnasium.com/datacoda/chef-l2tp-ipsec)
 [![Build Status](https://travis-ci.org/datacoda/chef-l2tp-ipsec.svg?branch=master)](https://travis-ci.org/datacoda/chef-l2tp-ipsec)
@@ -13,36 +13,48 @@ Cookbook to create a L2TP/IPSEC VPN.  It installs
 - `sysctl` - Sets up nic forwarding.
 - `monit-ng` - For l2tp-ipsec::monit recipe.
 
-Requirements
-------------
+## Requirements
 
 This VPN server requires full virtualization like KVM or XEN.  It does not work under OpenVZ.
 
+## Usage
 
-Usage
------
+```
+{
+  "l2tp-ipsec": {
+    "public_ip": "xxx.xxx.xxx.xxx",
+    "private_ip": "xxx.xxx.xxx.xxx",
+    "virtual_ip_range": "10.55.55.0/24",
+    "preshared_key": "your secret",
+    "users": [
+      {"username": "USER", "password": "PASS"}
+    ]
+  }
+}
+```
 
-1. If you have a unique setup of net interfaces, override private_interface and public_interface as need be.
+## Attributes
 
-2. Set the attribute `preshared_key`
+* `default['l2tp-ipsec']['public_interface'] = 'eth0'`
+* `default['l2tp-ipsec']['private_interface'] = 'eth0'`
+* `default['l2tp-ipsec']['public_ip'] = 'xxx.xxx.xxx.xxx'`
+* `default['l2tp-ipsec']['private_ip'] = 'xxx.xxx.xxx.xxx'`
+* `default['l2tp-ipsec']['virtual_ip_range'] = '10.55.55.5-10.55.55.100'`
+* `default['l2tp-ipsec']['virtual_interface_ip'] = '10.55.55.4'`
+* `default['l2tp-ipsec']['ppp_link_network'] = '10.55.55.0/24'`
+* `default['l2tp-ipsec']['dns_servers'] = ['8.8.8.8', '8.8.4.4']`
+* `default['l2tp-ipsec']['preshared_key'] = ''`
+* `default['l2tp-ipsec']['users'] = []`
 
-3. To add users, fill the node attribute `users`.  It accepts an array of users
-
-     # [ { username: bob, vpn_password: mypass } ]
-
-
-Attributes
-----------
-
-
-Recipes
--------
+## Recipes
 
 ### default
+
 Just calls install.
 
 ### install
-Installs the packages and configures it.  This does not include any iptable or send_redirects management.
+
+Installs the packages and configures it. This does not include any iptable or send_redirects management.
 
 To complete the installation, either include the firewall recipe or add your own masquerade routing.
 
@@ -67,18 +79,19 @@ COMMIT
 ```
 
 ### firewall
-Uses the iptables to open the required ports.  Also adds postrouting to the iptables. Also turns off redirects, etc according to
+
+Uses the iptables to open the required ports. Also adds postrouting to the iptables. Also turns off redirects, etc according to
 
 https://raymii.org/s/tutorials/IPSEC_L2TP_vpn_with_Ubuntu_12.04.html
 https://raymii.org/s/tutorials/IPSEC_L2TP_vpn_with_Ubuntu_14.04.html
 
 ### monit
+
 Configures monit to watch the ipsec and xl2tpd services.
 
+## License & Authors
 
-License & Authors
------------------
-- Author:: Li-Te Chen (<datacoda@gmail.com>)
+- Based on [chef-l2tp-ipsec](https://github.com/datacoda/chef-l2tp-ipsec)
 
 ```text
 Copyright 2014-2016 Nephila Graphic, Li-Te Chen

@@ -5,48 +5,63 @@
 version 2
 
 config setup
+    # In what directory should things started by setup (notably the Pluto daemon) be allowed to dump core?
     dumpdir=/var/run/pluto/
+
+    # Whether to accept/offer to support NAT (NAPT, also known as "IP Masqurade") workaround for IPsec
     nat_traversal=yes
+
+    # Contains the networks that are allowed as subnet= for the remote client. In other words, the address ranges that may live behind a NAT router through which a client connects.
     virtual_private=%v4:<%= @ppp_link_network %>,%v4:<%= @private_ip %>/32
+
+    # Decide which protocol stack is going to be used.
     protostack=netkey
+
+    # Send a keep-alive packet every 60 seconds.
     force_keepalive=yes
     keep_alive=60
 
 conn L2TP-PSK-noNAT
+    # Shared secret. Use rsasig for certificates.
     authby=secret
+
+    # Disable pfs
     pfs=no
+
+    # The ipsec tunnel should be started and routes created when the ipsec daemon itself starts.
     auto=add
+
+    # Only negotiate a conn. 3 times.
     keyingtries=3
 
-    rekey=no
-
-    ike=aes256-sha1,aes128-sha1,3des-sha1
-    phase2alg=aes256-sha1,aes128-sha1,3des-sha1
+    ike=aes256-sha1;modp1024,3des-sha1;modp1024
+    phase2alg=aes256-sha1;modp1024,3des-sha1;modp1024
     # https://lists.openswan.org/pipermail/users/2014-April/022947.html
-    # specifies the phase 1 encryption scheme, the hashing algorithm, and the diffie-hellman group. The modp1024 is for Diffie-Hellman 2. Why 'modp' instead of dh? DH2 is a 1028 bit encryption algorithm that modulo's a prime number, e.g. modp1028. See RFC 5114 for details or the wiki page on diffie hellmann, if interested.
+    # Specifies the phase 1 encryption scheme, the hashing algorithm, and the diffie-hellman group. The modp1024 is for Diffie-Hellman 2. Why 'modp' instead of dh? DH2 is a 1028 bit encryption algorithm that modulo's a prime number, e.g. modp1028. See RFC 5114 for details or the wiki page on diffie hellmann, if interested.
 
-    # Apple iOS doesn't send delete notify so we need dead peer detection
-    # to detect vanishing clients
+    # Disables Aggressive Mode. Sets Main Mode
+    aggrmode=no
+
+    # Dead Peer Detection (RFC 3706) keepalive delay
     dpddelay=30
+    # Length of time (in seconds) we will idle without hearing either an R_U_THERE poll from our peer, or an R_U_THERE_ACK reply.
     dpdtimeout=120
+    # When a DPD enabled peer is declared dead, what action should be taken. clear means the eroute and SA with both be cleared.
     dpdaction=clear
 
     # Set ikelifetime and keylife to same defaults windows has
+    rekey=no
     ikelifetime=8h
     keylife=1h
+
+    # Because we use l2tp as tunnel protocol
     type=transport
 
     # Replace IP address with your local IP
     left=<%= @public_ip %>
-
-    # For updated Windows 2000/XP clients,
-    # to support old clients as well, use leftprotoport=17/%any
     leftprotoport=17/1701
     right=%any
     rightprotoport=17/%any
 
-    #force all to be nat'ed. because of iOS
+    # Force all to be nat'ed. because of iOS
     #forceencaps=yes
-
-# leave blank line after this
-
