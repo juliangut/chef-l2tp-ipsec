@@ -21,7 +21,7 @@ config setup
     force_keepalive=yes
     keep_alive=60
 
-conn L2TP-PSK-noNAT
+conn L2TP-PSK
     # Shared secret. Use rsasig for certificates.
     authby=secret
 
@@ -29,7 +29,7 @@ conn L2TP-PSK-noNAT
     pfs=no
 
     # The ipsec tunnel should be started and routes created when the ipsec daemon itself starts.
-    auto=add
+    auto=start
 
     # Only negotiate a conn. 3 times.
     keyingtries=3
@@ -64,4 +64,4 @@ conn L2TP-PSK-noNAT
     rightprotoport=17/%any
 
     # Force all to be nat'ed. because of iOS
-    #forceencaps=yes
+    forceencaps=yes

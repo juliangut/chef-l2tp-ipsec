@@ -135,50 +135,35 @@ sysctl_param 'net.ipv4.ip_forward' do
   value 1
 end
 
-sysctl_param 'net/ipv6/conf/all/forwarding' do
-  value 0
-end
-
-sysctl_param 'net/ipv6/conf/default/forwarding' do
-  value 0
-end
-
 sysctl_param 'net.ipv4.conf.all.accept_redirects' do
   value 0
 end
-
-sysctl_param 'net/ipv4/conf/all/accept_redirects' do
+sysctl_param 'net.ipv4.conf.default.accept_redirects' do
+  value 0
+end
+sysctl_param 'net.ipv4.conf.all.send_redirects' do
+  value 0
+end
+sysctl_param 'net.ipv4.conf.default.send_redirects' do
   value 0
 end
 
-sysctl_param 'net/ipv4/conf/default/accept_redirects' do
+sysctl_param 'net/ipv6/conf/all/forwarding' do
+  value 0
+end
+sysctl_param 'net/ipv6/conf/default/forwarding' do
   value 0
 end
 
 sysctl_param 'net/ipv6/conf/all/accept_redirects' do
   value 0
 end
-
 sysctl_param 'net/ipv6/conf/default/accept_redirects' do
   value 0
 end
-
-sysctl_param 'net.ipv4.conf.all.send_redirects' do
-  value 0
-end
-
-sysctl_param 'net/ipv4/conf/all/send_redirects' do
-  value 0
-end
-
-sysctl_param 'net/ipv4/conf/default/send_redirects' do
-  value 0
-end
-
 sysctl_param 'net/ipv6/conf/all/send_redirects' do
   value 0
 end
-
 sysctl_param 'net/ipv6/conf/default/send_redirects' do
   value 0
 end
