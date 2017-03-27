@@ -135,6 +135,13 @@ sysctl_param 'net.ipv4.ip_forward' do
   value 1
 end
 
+sysctl_param 'net.ipv4.conf.all.rp_filter' do
+  value 0
+end
+sysctl_param 'net.ipv4.conf.default.rp_filter' do
+  value 0
+end
+
 sysctl_param 'net.ipv4.conf.all.accept_redirects' do
   value 0
 end
@@ -155,6 +162,13 @@ sysctl_param 'net/ipv6/conf/default/forwarding' do
   value 0
 end
 
+sysctl_param 'net/ipv6/conf/all/.rp_filter' do
+  value 0
+end
+sysctl_param 'net/ipv6/conf/default/rp_filter' do
+  value 0
+end
+
 sysctl_param 'net/ipv6/conf/all/accept_redirects' do
   value 0
 end
@@ -168,7 +182,7 @@ sysctl_param 'net/ipv6/conf/default/send_redirects' do
   value 0
 end
 
-Dir['/proc/sys/net/ipv4/conf/*/send_redirects'].each do |interface|
+Dir['/proc/sys/net/ipv4/conf/*/{send_redirects,rp_filter}'].each do |interface|
   interface.sub!(%r{/proc/sys/}, '')
 
   sysctl_param interface do
