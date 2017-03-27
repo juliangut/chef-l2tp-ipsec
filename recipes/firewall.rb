@@ -56,7 +56,7 @@ end
 
 #Do not NAT VPN traffic
 firewall_rule 'no vpn nat' do
-  raw -t nat -A POSTROUTING -m policy --dir out --pol none -j MASQUERADE
+  raw "-t nat -A POSTROUTING -m policy --dir out --pol none -j MASQUERADE"
 end
 
 firewall_rule 'rhel packet-routing' do
