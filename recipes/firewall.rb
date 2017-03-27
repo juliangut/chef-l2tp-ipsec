@@ -54,24 +54,14 @@ firewall_rule 'ipsec-nat-t' do
   command :allow
 end
 
-if debian?
-  # The setup for Ubuntu 14.04 has changed somewhat.
-  firewall_rule '12.x packet-routing' do
-    raw "-A POSTROUTING -s #{node['l2tp-ipsec']['ppp_link_network']} -o #{node['l2tp-ipsec']['private_interface']} -j MASQUERADE"
-    position 105
-    only_if { node['platform_version'].include?('12.') }
-  end
+#Do not NAT VPN traffic
+firewall_rule 'no vpn nat' do
+  raw -t nat -A POSTROUTING -m policy --dir out --pol none -j MASQUERADE
+end
 
-  firewall_rule '14.x packet-routing' do
-    raw "-A POSTROUTING -j SNAT --to-source #{node['l2tp-ipsec']['public_ip']} -o #{node['l2tp-ipsec']['private_interface']}"
-    position 105
-    only_if { node['platform_version'].include?('14.') }
-  end
-else
-  firewall_rule 'rhel packet-routing' do
-    raw "-A POSTROUTING -j SNAT --to-source #{node['l2tp-ipsec']['public_ip']} -o #{node['l2tp-ipsec']['private_interface']}"
-    position 105
-  end
+firewall_rule 'rhel packet-routing' do
+  raw "-A POSTROUTING -j SNAT --to-source #{node['l2tp-ipsec']['public_ip']} -o #{node['l2tp-ipsec']['private_interface']}"
+  position 105
 end
 
 # Allow IPSEC authentication using ESP protocol
@@ -128,31 +118,18 @@ firewall_rule 'forward_ppp_out' do
   raw "-A FORWARD -i ppp+ -o #{node['l2tp-ipsec']['private_interface']} -j ACCEPT"
 end
 
-# Send redirects aren't normally in the sysctl file.  We'll need to pull
-# up all the interfaces
+# Send redirects aren't normally in the sysctl file.  We'll need to pull up all the interfaces
 
 sysctl_param 'net.ipv4.ip_forward' do
   value 1
 end
 
-sysctl_param 'net.ipv4.conf.all.rp_filter' do
-  value 0
-end
-sysctl_param 'net.ipv4.conf.default.rp_filter' do
-  value 0
-end
+Dir['/proc/sys/net/ipv4/conf/*/{accept_redirects,send_redirects,rp_filter}'].each do |interface|
+  interface.sub!(%r{/proc/sys/}, '')
 
-sysctl_param 'net.ipv4.conf.all.accept_redirects' do
-  value 0
-end
-sysctl_param 'net.ipv4.conf.default.accept_redirects' do
-  value 0
-end
-sysctl_param 'net.ipv4.conf.all.send_redirects' do
-  value 0
-end
-sysctl_param 'net.ipv4.conf.default.send_redirects' do
-  value 0
+  sysctl_param interface do
+    value 0
+  end
 end
 
 sysctl_param 'net/ipv6/conf/all/forwarding' do
@@ -162,27 +139,7 @@ sysctl_param 'net/ipv6/conf/default/forwarding' do
   value 0
 end
 
-sysctl_param 'net/ipv6/conf/all/.rp_filter' do
-  value 0
-end
-sysctl_param 'net/ipv6/conf/default/rp_filter' do
-  value 0
-end
-
-sysctl_param 'net/ipv6/conf/all/accept_redirects' do
-  value 0
-end
-sysctl_param 'net/ipv6/conf/default/accept_redirects' do
-  value 0
-end
-sysctl_param 'net/ipv6/conf/all/send_redirects' do
-  value 0
-end
-sysctl_param 'net/ipv6/conf/default/send_redirects' do
-  value 0
-end
-
-Dir['/proc/sys/net/ipv4/conf/*/{send_redirects,rp_filter}'].each do |interface|
+Dir['/proc/sys/net/ipv6/conf/*/{accept_redirects,send_redirects,rp_filter}'].each do |interface|
   interface.sub!(%r{/proc/sys/}, '')
 
   sysctl_param interface do

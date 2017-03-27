@@ -2,16 +2,17 @@
 # Do NOT modify this file by hand!
 
 require-mschap-v2
+#debug
 <% @dns_servers.each do |dns| -%>
 ms-dns <%= dns %>
 <% end -%>
 asyncmap 0
 auth
 crtscts
-lock
 hide-password
 modem
-#debug
+mtu 1200
+mru 1000
 name l2tpd
 proxyarp
 lcp-echo-interval 30

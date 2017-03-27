@@ -53,6 +53,7 @@ Chef::Log.info "Using private IP #{private_ip} for l2tp-ipsec"
 
 default['l2tp-ipsec']['users'] = []
 
+default['l2tp-ipsec']['vpn_id'] = ''
 default['l2tp-ipsec']['virtual_ip_range'] = '10.55.55.5-10.55.55.100'
 default['l2tp-ipsec']['virtual_interface_ip'] = '10.55.55.4'
 default['l2tp-ipsec']['ppp_link_network'] = '10.55.55.0/24'

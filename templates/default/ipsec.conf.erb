@@ -41,6 +41,7 @@ conn L2TP-PSK-noNAT
     # Disables Aggressive Mode. Sets Main Mode
     aggrmode=no
 
+    Apple iOS doesn't send delete notify so we need dead peer detection to detect vanishing clients
     # Dead Peer Detection (RFC 3706) keepalive delay
     dpddelay=30
     # Length of time (in seconds) we will idle without hearing either an R_U_THERE poll from our peer, or an R_U_THERE_ACK reply.
@@ -58,8 +59,15 @@ conn L2TP-PSK-noNAT
 
     # Replace IP address with your local IP
     left=<%= @public_ip %>
+#    left=%defaultroute
     leftprotoport=17/1701
+<% if @vpn_id != '' -%>
+    leftid=@<%= @vpn_id %>
+<% end -%>
+
     right=%any
+    rightsubnet=vhost:%no,%priv
+    # Work around for Apple OSX clients that use a randomly high port, but propose "0" instead of their port
     rightprotoport=17/%any
 
     # Force all to be nat'ed. because of iOS
