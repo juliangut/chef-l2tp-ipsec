@@ -55,9 +55,9 @@ firewall_rule 'ipsec-nat-t' do
 end
 
 #Do not NAT VPN traffic
-firewall_rule 'no vpn nat' do
-  raw "-t nat -A POSTROUTING -m policy --dir out --pol none -j MASQUERADE"
-end
+#firewall_rule 'no vpn nat' do
+#  raw "-t nat -A POSTROUTING -m policy --dir out --pol none -j MASQUERADE"
+#end
 
 firewall_rule 'rhel packet-routing' do
   raw "-A POSTROUTING -j SNAT --to-source #{node['l2tp-ipsec']['public_ip']} -o #{node['l2tp-ipsec']['private_interface']}"
