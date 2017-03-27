@@ -33,8 +33,8 @@ conn L2TP-PSK
     # Only negotiate a conn. 3 times.
     keyingtries=3
 
-    ike=aes256-sha1;modp1024,3des-sha1;modp1024
-    phase2alg=aes256-sha1;modp1024,3des-sha1;modp1024
+    ike=aes256-sha1,3des-sha1;modp1024
+    phase2alg=aes256-sha1,3des-sha1
     # https://lists.openswan.org/pipermail/users/2014-April/022947.html
     # Specifies the phase 1 encryption scheme, the hashing algorithm, and the diffie-hellman group. The modp1024 is for Diffie-Hellman 2. Why 'modp' instead of dh? DH2 is a 1028 bit encryption algorithm that modulo's a prime number, e.g. modp1028. See RFC 5114 for details or the wiki page on diffie hellmann, if interested.
 
