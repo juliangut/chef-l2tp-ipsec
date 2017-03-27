@@ -20,7 +20,7 @@ config setup
     # Send a keep-alive packet every 60 seconds.
     keep_alive=60
 
-conn L2TP-PSK
+conn L2TP-PSK-noNAT
     # Shared secret. Use rsasig for certificates.
     authby=secret
 
@@ -28,7 +28,7 @@ conn L2TP-PSK
     pfs=no
 
     # The ipsec tunnel should be started and routes created when the ipsec daemon itself starts.
-    auto=start
+    auto=add
 
     # Only negotiate a conn. 3 times.
     keyingtries=3
