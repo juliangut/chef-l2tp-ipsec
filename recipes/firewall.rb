@@ -55,12 +55,12 @@ firewall_rule 'ipsec-nat-t' do
 end
 
 #Do not NAT VPN traffic
-#firewall_rule 'no vpn nat' do
-#  raw "-t nat -A POSTROUTING -m policy --dir out --pol none -j MASQUERADE"
-#end
+firewall_rule 'no vpn nat' do
+  raw "-t nat -A POSTROUTING -m policy --dir out --pol none -j MASQUERADE"
+end
 
 firewall_rule 'rhel packet-routing' do
-  raw "-A POSTROUTING -j SNAT --to-source #{node['l2tp-ipsec']['public_ip']} -o #{node['l2tp-ipsec']['private_interface']}"
+  raw "-t nat -A POSTROUTING -s #{node['l2tp-ipsec']['public_ip']} -o #{node['l2tp-ipsec']['private_interface']} -j MASQUERADE"
   position 105
 end
 
@@ -74,17 +74,6 @@ end
 firewall_rule 'esp_out' do
   direction :out
   protocol 50
-  command :allow
-end
-
-firewall_rule 'ah_in' do
-  protocol 51
-  command :allow
-end
-
-firewall_rule 'ah_out' do
-  direction :out
-  protocol 51
   command :allow
 end
 

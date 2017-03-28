@@ -3,10 +3,12 @@
 
 [global]
 ipsec saref = yes
+port = 1701
 
 [lns default]
 ip range = <%= @virtual_ip_range %>
 local ip = <%= @virtual_interface_ip %>
+require chap = yes
 refuse pap = yes
 require authentication = yes
 ppp debug = yes

@@ -6,6 +6,8 @@ require-mschap-v2
 <% @dns_servers.each do |dns| -%>
 ms-dns <%= dns %>
 <% end -%>
+ipcp-accept-local
+ipcp-accept-remote
 asyncmap 0
 auth
 crtscts
